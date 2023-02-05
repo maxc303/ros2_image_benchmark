@@ -40,10 +40,17 @@ void ImageSubTestNode::check_latency(
   auto avg_lat_ns = latencies_sum_ / latencies_.size();
   auto avg_lat_ms = static_cast<double>(avg_lat_ns) / 1'000'000.0;
 
-  std::stringstream oss;
-  oss << "Average Sub->Pub latency of last [" << latencies_.size()
-      << "] msgs is " << avg_lat_ms << " ms.";
+  std::stringstream latency_info_ss;
+  latency_info_ss << "Average Sub->Pub latency of last [" << latencies_.size()
+                  << "] msgs is " << avg_lat_ms << " ms.";
 
   RCLCPP_INFO_STREAM_THROTTLE(this->get_logger(), *this->get_clock(), 1000,
-                              oss.str());
+                              latency_info_ss.str());
+
+  std::stringstream address_info_ss;
+  address_info_ss << "Subscribe image from ConstSharedPtr address:" << msg.get()
+                  << " Published msg address: " << msg->header.frame_id;
+
+  RCLCPP_INFO_STREAM_THROTTLE(this->get_logger(), *this->get_clock(), 1000,
+                              address_info_ss.str());
 }

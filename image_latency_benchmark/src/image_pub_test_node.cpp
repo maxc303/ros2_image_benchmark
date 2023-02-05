@@ -39,11 +39,18 @@ ImagePubTestNode::ImagePubTestNode() : Node("image_pub_test_node") {
 };
 
 void ImagePubTestNode::publish_frame() {
+  sensor_msgs::msg::Image::UniquePtr msg_ptr =
+      std::unique_ptr<sensor_msgs::msg::Image>(new sensor_msgs::msg::Image);
+  *msg_ptr = image_;
+  std::stringstream msg_address;
+  msg_address << msg_ptr.get();
+
+  // Use header.frame id to store message pointer address
+  msg_ptr->header.frame_id = msg_address.str();
+
   auto t_now =
       std::chrono::high_resolution_clock::now().time_since_epoch().count();
-
-  image_.header.stamp.sec = static_cast<int>(t_now / 1'000'000'000);
-  image_.header.stamp.nanosec = static_cast<int>(t_now % 1'000'000'000);
-
-  publisher_->publish(image_);
+  msg_ptr->header.stamp.sec = static_cast<int>(t_now / 1'000'000'000);
+  msg_ptr->header.stamp.nanosec = static_cast<int>(t_now % 1'000'000'000);
+  publisher_->publish(std::move(msg_ptr));
 }

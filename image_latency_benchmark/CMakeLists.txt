@@ -17,8 +17,21 @@ include_directories(
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include/>
   $<INSTALL_INTERFACE:include>)
 
-add_executable(test_image_pub src/image_pub_test_node.cpp src/test_image_publish_main.cpp)
-ament_target_dependencies(test_image_pub rclcpp sensor_msgs)
+
+add_library(test_nodes src/test_image_publish_main.cpp src/image_sub_test_node.cpp src/image_pub_test_node.cpp)
+ament_target_dependencies(test_nodes rclcpp sensor_msgs)
+
+add_executable(test_image_pub src/test_image_publish_main.cpp)
+target_link_libraries(test_image_pub test_nodes)
+
+add_executable(test_image_sub src/test_image_subscribe_main.cpp)
+target_link_libraries(test_image_sub test_nodes)
+
+add_executable(test_image_pub_sub src/test_image_pub_sub_main.cpp)
+target_link_libraries(test_image_pub_sub test_nodes)
+
+install(TARGETS test_image_pub test_image_sub test_image_pub_sub
+  DESTINATION lib/${PROJECT_NAME})
 
 if(BUILD_TESTING)
   find_package(ament_lint_auto REQUIRED)

@@ -1,12 +1,14 @@
 #include "image_latency_benchmark/image_pub_test_node.hpp"
 
+#include <sstream>
+
 ImagePubTestNode::ImagePubTestNode() : Node("image_pub_test_node") {
-  width_ = this->declare_parameter<int>("width", 1920);
-  height_ = this->declare_parameter<int>("height", 1080);
+  width_ = this->declare_parameter<int>("width", 3840);
+  height_ = this->declare_parameter<int>("height", 2160);
   pub_freq_hz_ = this->declare_parameter<int>("pub_freq_hz", 10);
   num_channels_ = this->declare_parameter<int>("num_channls", 3);
   topic_name_ =
-      this->declare_parameter<std::string>("topic_name", "pub_test_image");
+      this->declare_parameter<std::string>("topic_name", "test_image/image");
 
   double callback_interval = 1.0 / static_cast<double>(pub_freq_hz_);
 
@@ -26,6 +28,14 @@ ImagePubTestNode::ImagePubTestNode() : Node("image_pub_test_node") {
   image_.step = static_cast<int>(num_channels_ * width_);
   image_.data = std::vector<uint8_t>(
       static_cast<int>(width_ * height_ * num_channels_), 128);
+
+  double data_size_megabytes =
+      static_cast<double>(image_.data.size()) / 1'000'000.0;
+  std::stringstream oss;
+  oss << "Initialzied publisher for topic: [" << topic_name_ << "] at "
+      << pub_freq_hz_ << "Hz, data size=" << data_size_megabytes << "MB.";
+
+  RCLCPP_INFO_STREAM(this->get_logger(), oss.str());
 };
 
 void ImagePubTestNode::publish_frame() {

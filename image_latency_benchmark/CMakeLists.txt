@@ -11,6 +11,15 @@ find_package(ament_cmake REQUIRED)
 # further dependencies manually.
 # find_package(<dependency> REQUIRED)
 
+find_package(rclcpp REQUIRED)
+find_package(sensor_msgs REQUIRED)
+include_directories(
+  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include/>
+  $<INSTALL_INTERFACE:include>)
+
+add_executable(test_image_pub src/image_pub_test_node.cpp src/test_image_publish_main.cpp)
+ament_target_dependencies(test_image_pub rclcpp sensor_msgs)
+
 if(BUILD_TESTING)
   find_package(ament_lint_auto REQUIRED)
   # the following line skips the linter which checks for copyrights

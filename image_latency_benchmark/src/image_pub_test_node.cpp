@@ -2,7 +2,9 @@
 
 #include <sstream>
 
-ImagePubTestNode::ImagePubTestNode() : Node("image_pub_test_node") {
+ImagePubTestNode::ImagePubTestNode()
+    : Node("image_pub_test_node",
+           rclcpp::NodeOptions().use_intra_process_comms(true)) {
   width_ = this->declare_parameter<int>("width", 3840);
   height_ = this->declare_parameter<int>("height", 2160);
   pub_freq_hz_ = this->declare_parameter<int>("pub_freq_hz", 10);
@@ -40,8 +42,9 @@ ImagePubTestNode::ImagePubTestNode() : Node("image_pub_test_node") {
 
 void ImagePubTestNode::publish_frame() {
   sensor_msgs::msg::Image::UniquePtr msg_ptr =
-      std::unique_ptr<sensor_msgs::msg::Image>(new sensor_msgs::msg::Image);
-  *msg_ptr = image_;
+      std::unique_ptr<sensor_msgs::msg::Image>(
+          new sensor_msgs::msg::Image(image_));
+
   std::stringstream msg_address;
   msg_address << msg_ptr.get();
 

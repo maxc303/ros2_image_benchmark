@@ -2,7 +2,9 @@
 
 #include <iostream>
 #include <sstream>
-ImageSubTestNode::ImageSubTestNode() : Node("image_sub_test_node") {
+ImageSubTestNode::ImageSubTestNode()
+    : Node("image_sub_test_node",
+           rclcpp::NodeOptions().use_intra_process_comms(true)) {
   topic_name_ =
       this->declare_parameter<std::string>("topic_name", "test_image/image");
   window_size_ =

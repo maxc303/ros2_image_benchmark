@@ -38,8 +38,18 @@ target_link_libraries(test_image_sub test_nodes)
 add_executable(test_image_pub_sub src/test_image_pub_sub_main.cpp)
 target_link_libraries(test_image_pub_sub test_nodes)
 
-install(TARGETS test_image_pub test_image_sub test_image_pub_sub
-  DESTINATION lib/${PROJECT_NAME})
+find_package(OpenCV REQUIRED)
+add_executable(test_yuv_bgr_conversion src/test_yuv_bgr_conversion.cpp)
+target_link_libraries(test_yuv_bgr_conversion ${OpenCV_LIBS})
+
+
+install(TARGETS 
+    test_image_pub 
+    test_image_sub 
+    test_image_pub_sub 
+    test_yuv_bgr_conversion
+  DESTINATION 
+    lib/${PROJECT_NAME})
 
 # Install launch files.
 install(DIRECTORY

@@ -3,10 +3,11 @@
 
 #include <rclcpp/rclcpp.hpp>
 #include <sensor_msgs/msg/image.hpp>
+namespace image_latency_benchmark {
 
 class ImagePubTestNode : public rclcpp::Node {
  public:
-  explicit ImagePubTestNode();
+  explicit ImagePubTestNode(const rclcpp::NodeOptions& options);
 
  private:
   void publish_frame();
@@ -21,5 +22,5 @@ class ImagePubTestNode : public rclcpp::Node {
   rclcpp::Publisher<sensor_msgs::msg::Image>::SharedPtr publisher_;
   rclcpp::TimerBase::SharedPtr timer_;
 };
-
+}
 #endif  // IMAGE_LATENCY_BENCHMARK__IMAGE_PUB_TEST_NODE_HPP

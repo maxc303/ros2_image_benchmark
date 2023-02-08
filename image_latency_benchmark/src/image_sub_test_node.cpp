@@ -2,9 +2,11 @@
 
 #include <iostream>
 #include <sstream>
-ImageSubTestNode::ImageSubTestNode()
-    : Node("image_sub_test_node",
-           rclcpp::NodeOptions().use_intra_process_comms(true)) {
+
+namespace image_latency_benchmark {
+
+ImageSubTestNode::ImageSubTestNode(const rclcpp::NodeOptions& options)
+    : Node("image_sub_test_node", options) {
   topic_name_ =
       this->declare_parameter<std::string>("topic_name", "test_image/image");
   window_size_ =
@@ -24,9 +26,9 @@ void ImageSubTestNode::check_latency(
       std::chrono::high_resolution_clock::now().time_since_epoch().count();
 
   auto t_pub =
-      std::chrono::nanoseconds{static_cast<uint64_t>(msg->header.stamp.sec) *
+      std::chrono::nanoseconds(static_cast<uint64_t>(msg->header.stamp.sec) *
                                    1'000'000'000 +
-                               static_cast<uint64_t>(msg->header.stamp.nanosec)}
+                               static_cast<uint64_t>(msg->header.stamp.nanosec))
           .count();
 
   auto pub_sub_latency = (t_now - t_pub);
@@ -51,8 +53,12 @@ void ImageSubTestNode::check_latency(
 
   std::stringstream address_info_ss;
   address_info_ss << "Subscribe image from ConstSharedPtr address:" << msg.get()
-                  << " Published msg address: " << msg->header.frame_id;
+                  << " . Published msg address is: " << msg->header.frame_id;
 
   RCLCPP_INFO_STREAM_THROTTLE(this->get_logger(), *this->get_clock(), 1000,
                               address_info_ss.str());
 }
+}  // namespace image_latency_benchmark
+#include "rclcpp_components/register_node_macro.hpp"
+
+RCLCPP_COMPONENTS_REGISTER_NODE(image_latency_benchmark::ImageSubTestNode);

@@ -6,9 +6,12 @@
 int main(int argc, char* argv[]) {
   rclcpp::init(argc, argv);
   rclcpp::executors::MultiThreadedExecutor executor;
-
-  auto pub_node = std::make_shared<ImagePubTestNode>();
-  auto sub_node = std::make_shared<ImageSubTestNode>();
+  rclcpp::NodeOptions options;
+  options.use_intra_process_comms(true);
+  auto pub_node =
+      std::make_shared<image_latency_benchmark::ImagePubTestNode>(options);
+  auto sub_node =
+      std::make_shared<image_latency_benchmark::ImageSubTestNode>(options);
 
   executor.add_node(pub_node);
   executor.add_node(sub_node);

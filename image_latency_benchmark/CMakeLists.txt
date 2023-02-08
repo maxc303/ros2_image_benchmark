@@ -13,13 +13,21 @@ find_package(ament_cmake REQUIRED)
 
 find_package(rclcpp REQUIRED)
 find_package(sensor_msgs REQUIRED)
+find_package(rclcpp_components REQUIRED)
 include_directories(
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include/>
   $<INSTALL_INTERFACE:include>)
 
 
-add_library(test_nodes src/test_image_publish_main.cpp src/image_sub_test_node.cpp src/image_pub_test_node.cpp)
-ament_target_dependencies(test_nodes rclcpp sensor_msgs)
+add_library(test_nodes SHARED src/test_image_publish_main.cpp src/image_sub_test_node.cpp src/image_pub_test_node.cpp)
+ament_target_dependencies(test_nodes rclcpp sensor_msgs rclcpp_components)
+
+rclcpp_components_register_nodes(
+  test_nodes 
+  "image_latency_benchmark::ImagePubTestNode" "image_latency_benchmark::ImageSubTestNode"
+)
+install(TARGETS test_nodes)
+
 
 add_executable(test_image_pub src/test_image_publish_main.cpp)
 target_link_libraries(test_image_pub test_nodes)
@@ -32,6 +40,12 @@ target_link_libraries(test_image_pub_sub test_nodes)
 
 install(TARGETS test_image_pub test_image_sub test_image_pub_sub
   DESTINATION lib/${PROJECT_NAME})
+
+# Install launch files.
+install(DIRECTORY
+  launch
+  DESTINATION share/${PROJECT_NAME}/
+)
 
 if(BUILD_TESTING)
   find_package(ament_lint_auto REQUIRED)

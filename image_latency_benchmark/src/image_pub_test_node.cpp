@@ -1,14 +1,14 @@
 #include "image_latency_benchmark/image_pub_test_node.hpp"
 
 #include <sstream>
+namespace image_latency_benchmark {
 
-ImagePubTestNode::ImagePubTestNode()
-    : Node("image_pub_test_node",
-           rclcpp::NodeOptions().use_intra_process_comms(true)) {
+ImagePubTestNode::ImagePubTestNode(const rclcpp::NodeOptions& options)
+    : Node("image_pub_test_node", options) {
   width_ = this->declare_parameter<int>("width", 3840);
   height_ = this->declare_parameter<int>("height", 2160);
   pub_freq_hz_ = this->declare_parameter<int>("pub_freq_hz", 10);
-  num_channels_ = this->declare_parameter<int>("num_channls", 3);
+  num_channels_ = this->declare_parameter<int>("num_channels", 3);
   topic_name_ =
       this->declare_parameter<std::string>("topic_name", "test_image/image");
 
@@ -57,3 +57,7 @@ void ImagePubTestNode::publish_frame() {
   msg_ptr->header.stamp.nanosec = static_cast<int>(t_now % 1'000'000'000);
   publisher_->publish(std::move(msg_ptr));
 }
+}  // namespace image_latency_benchmark
+#include "rclcpp_components/register_node_macro.hpp"
+
+RCLCPP_COMPONENTS_REGISTER_NODE(image_latency_benchmark::ImagePubTestNode);

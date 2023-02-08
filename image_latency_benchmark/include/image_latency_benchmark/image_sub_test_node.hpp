@@ -4,9 +4,11 @@
 #include <queue>
 #include <rclcpp/rclcpp.hpp>
 #include <sensor_msgs/msg/image.hpp>
+namespace image_latency_benchmark {
+
 class ImageSubTestNode : public rclcpp::Node {
  public:
-  explicit ImageSubTestNode();
+  explicit ImageSubTestNode(const rclcpp::NodeOptions& options);
 
  private:
   void check_latency(const sensor_msgs::msg::Image::ConstSharedPtr msg);
@@ -19,5 +21,5 @@ class ImageSubTestNode : public rclcpp::Node {
   std::string topic_name_;
   rclcpp::Subscription<sensor_msgs::msg::Image>::SharedPtr subscriber_;
 };
-
+}  // namespace image_latency_benchmark
 #endif  // IMAGE_LATENCY_BENCHMARK__IMAGE_SUB_TEST_NODE_HPP

@@ -42,7 +42,7 @@ Test BGR<->YUV conversion with w=2160, h=3840
 ```
 
 ## Test image encode with OpenCV (JPG and PNG)
-Test the latency of cv::imencode, which is used in image_transport for image compreesion.
+Test the latency of cv::imencode, which is used in [image_transport](https://github.com/ros-perception/image_transport_plugins/blob/humble/compressed_image_transport/src/compressed_publisher.cpp) for image compression .
 ```
 ./install/image_latency_benchmark/lib/image_latency_benchmark/test_cv_imencode <test_image_path>
 
@@ -52,7 +52,7 @@ ros2 run image_latency_benchmark test_cv_imencode <test_image_path>
 ```
 Example output:
 
-Note, the compressed ratio depends on the image content.
+Note, the compresssion ratio depends on the image content.
 ```
 Running test on test image: "ros2_image_benchmark/test_data/test_image_4k.jpg"
 Test OpenCV imencode conversion with w=3840, h=2160, bgr8 raw data size = 24.8832 MB
@@ -61,4 +61,24 @@ Quality level=20, compressed data size=0.222357 MB, compression rate=0.00893603,
 Quality level=30, compressed data size=0.269238 MB,
 ............
 ```
+
+## Test ROS2 Image Msg publish->subscribe latency 
+The test is used to understand the latency to subscribe image message.
+Test parameters can be configured in `config/pub_sub_test_params.yaml`. `colcon build` again to install the params file.
+
+### Intra-process pub-sub
+```
+# Launch the publisher and subscriber from the same process
+ros2 launch image_latency_benchmark composite_pub_sub.launch.py
+```
+
+### Inter-process pub-sub
+```
+# Launch the publisher
+ros2 launch image_latency_benchmark pub_test.launch.py
+
+# Launch the subscriber from another terminal
+ros2 launch image_latency_benchmark sub_test.launch.py
+```
+
 

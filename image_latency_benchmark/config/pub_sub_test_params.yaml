@@ -1,0 +1,20 @@
+pub_sub_test:
+  ros__parameters:
+    # image topic_name will be shared with subscriber and publisher
+    topic_name: "test_image/image"
+
+    # image dims
+    width: 3840
+    height: 2160
+
+    # number of image channel. bgr8 = 3
+    num_channels: 3
+
+    # image publish frequency
+    pub_freq_hz: 10
+
+    # window for calculating the average letency
+    window_size: 10
+        
+
+

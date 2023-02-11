@@ -41,21 +41,20 @@ ImagePubTestNode::ImagePubTestNode(const rclcpp::NodeOptions& options)
 };
 
 void ImagePubTestNode::publish_frame() {
-  sensor_msgs::msg::Image::UniquePtr msg_ptr =
-      std::unique_ptr<sensor_msgs::msg::Image>(
-          new sensor_msgs::msg::Image(image_));
+  msg_ptr_ = std::unique_ptr<sensor_msgs::msg::Image>(
+      new sensor_msgs::msg::Image(image_));
 
   std::stringstream msg_address;
-  msg_address << msg_ptr.get();
+  msg_address << msg_ptr_.get();
 
   // Use header.frame id to store message pointer address
-  msg_ptr->header.frame_id = msg_address.str();
+  msg_ptr_->header.frame_id = msg_address.str();
 
   auto t_now =
       std::chrono::high_resolution_clock::now().time_since_epoch().count();
-  msg_ptr->header.stamp.sec = static_cast<int>(t_now / 1'000'000'000);
-  msg_ptr->header.stamp.nanosec = static_cast<int>(t_now % 1'000'000'000);
-  publisher_->publish(std::move(msg_ptr));
+  msg_ptr_->header.stamp.sec = static_cast<int>(t_now / 1'000'000'000);
+  msg_ptr_->header.stamp.nanosec = static_cast<int>(t_now % 1'000'000'000);
+  publisher_->publish(std::move(msg_ptr_));
 }
 }  // namespace image_latency_benchmark
 #include "rclcpp_components/register_node_macro.hpp"

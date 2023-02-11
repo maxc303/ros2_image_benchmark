@@ -18,9 +18,11 @@ class ImagePubTestNode : public rclcpp::Node {
   std::string topic_name_;
   float num_channels_ = 3;
   std::string encoding_ = "bgr8";
+
+  sensor_msgs::msg::Image::UniquePtr msg_ptr_;
   sensor_msgs::msg::Image image_;
   rclcpp::Publisher<sensor_msgs::msg::Image>::SharedPtr publisher_;
   rclcpp::TimerBase::SharedPtr timer_;
 };
-}
+}  // namespace image_latency_benchmark
 #endif  // IMAGE_LATENCY_BENCHMARK__IMAGE_PUB_TEST_NODE_HPP

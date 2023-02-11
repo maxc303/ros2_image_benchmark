@@ -23,24 +23,31 @@ include_directories(
   $<INSTALL_INTERFACE:include>)
 
 
-add_library(test_nodes SHARED src/test_image_publish_main.cpp src/image_sub_test_node.cpp src/image_pub_test_node.cpp)
-ament_target_dependencies(test_nodes rclcpp sensor_msgs rclcpp_components)
+add_library(pub_sub_test_nodes 
+  SHARED 
+  src/image_sub_test_node.cpp 
+  src/image_pub_test_node.cpp)
+ament_target_dependencies(pub_sub_test_nodes rclcpp sensor_msgs rclcpp_components)
 
+# Register components for composite tests
+# Refs:
+# https://docs.ros.org/en/foxy/Concepts/About-Composition.html#writing-a-component
+# https://roscon.ros.org/2019/talks/roscon2019_composablenodes.pdf
 rclcpp_components_register_nodes(
-  test_nodes 
+  pub_sub_test_nodes 
   "image_latency_benchmark::ImagePubTestNode" "image_latency_benchmark::ImageSubTestNode"
 )
-install(TARGETS test_nodes)
+install(TARGETS pub_sub_test_nodes)
 
 
 add_executable(test_image_pub src/test_image_publish_main.cpp)
-target_link_libraries(test_image_pub test_nodes)
+target_link_libraries(test_image_pub pub_sub_test_nodes)
 
 add_executable(test_image_sub src/test_image_subscribe_main.cpp)
-target_link_libraries(test_image_sub test_nodes)
+target_link_libraries(test_image_sub pub_sub_test_nodes)
 
 add_executable(test_image_pub_sub src/test_image_pub_sub_main.cpp)
-target_link_libraries(test_image_pub_sub test_nodes)
+target_link_libraries(test_image_pub_sub pub_sub_test_nodes)
 
 find_package(OpenCV REQUIRED)
 add_executable(test_yuv_bgr_conversion src/test_yuv_bgr_conversion.cpp)
@@ -60,6 +67,7 @@ install(TARGETS
 # Install launch files.
 install(DIRECTORY
   launch
+  config
   DESTINATION share/${PROJECT_NAME}/
 )
 

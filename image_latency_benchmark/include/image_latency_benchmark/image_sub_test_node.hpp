@@ -11,6 +11,11 @@ class ImageSubTestNode : public rclcpp::Node {
   explicit ImageSubTestNode(const rclcpp::NodeOptions& options);
 
  private:
+  /**
+   * @brief Subscriber call back. Log the latency from msg time.
+   *
+   * @param msg
+   */
   void check_latency(const sensor_msgs::msg::Image::ConstSharedPtr msg);
 
   std::queue<long> latencies_;

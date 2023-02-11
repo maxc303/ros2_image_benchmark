@@ -82,3 +82,16 @@ ros2 launch image_latency_benchmark sub_test.launch.py
 ```
 
 
+### Results
+Intra-process
+```
+[component_container-1] [INFO] [1676140763.821180683] [sub_test]: Average Pub->Sub latency of last [10] msgs is 0.049923 ms, Msg data size=24.8832MB.
+[component_container-1] [INFO] [1676140763.821228118] [sub_test]: Subscribe image from ConstSharedPtr address:0x55a71b4cd310. Published msg address is: 0x55a71b4cd310.
+
+```
+
+Inter-process
+```
+[test_image_sub-1] [INFO] [1676140828.963271744] [image_pub_node]: Average Pub->Sub latency of last [10] msgs is 8.64929 ms, Msg data size=24.8832MB.
+[test_image_sub-1] [INFO] [1676140828.963322093] [image_pub_node]: Subscribe image from ConstSharedPtr address:0x55c7b2cc2430. Published msg address is: 0x561d83452190.
+```

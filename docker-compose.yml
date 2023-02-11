@@ -2,9 +2,9 @@ version: "3.9"
 services:
   ros2_img_lat_benchmark:
     build: .
-    container_name: ros2_img_lat_benchmark
+    container_name: ros2_image_benchmark
     working_dir: /home/workspace
     tty: true
     volumes:
-      - ./:/home/workspace/ros2_img_lat_benchmark
+      - ./:/home/workspace/ros2_image_benchmark
     

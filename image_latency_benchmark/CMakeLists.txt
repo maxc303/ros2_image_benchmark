@@ -5,6 +5,10 @@ if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
   add_compile_options(-Wall -Wextra -Wpedantic)
 endif()
 
+if(NOT CMAKE_CXX_STANDARD)
+  set(CMAKE_CXX_STANDARD 17)
+endif()
+
 # find dependencies
 find_package(ament_cmake REQUIRED)
 # uncomment the following section in order to fill in
@@ -41,13 +45,15 @@ target_link_libraries(test_image_pub_sub test_nodes)
 find_package(OpenCV REQUIRED)
 add_executable(test_yuv_bgr_conversion src/test_yuv_bgr_conversion.cpp)
 target_link_libraries(test_yuv_bgr_conversion ${OpenCV_LIBS})
-
+add_executable(test_cv_imencode src/test_cv_imencode.cpp)
+target_link_libraries(test_cv_imencode ${OpenCV_LIBS})
 
 install(TARGETS 
     test_image_pub 
     test_image_sub 
     test_image_pub_sub 
     test_yuv_bgr_conversion
+    test_cv_imencode
   DESTINATION 
     lib/${PROJECT_NAME})
 
